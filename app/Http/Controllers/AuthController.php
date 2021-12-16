@@ -22,31 +22,38 @@ class AuthController extends Controller
             'email' => $field['email'],
             'password' => bcrypt($field['password']),
         ]);
-        $token = $user->createToken('myapptoken')->plainTextToken;
-        $response = [
-            'user' => $user,
-            'token' => $token,
-        ];
-        return Response($response, 201);
+        return $user->createToken('myapptoken')->plainTextToken;
+        // $response = [
+        //     'user' => $user,
+        //     'token' => $token,
+        // ];
+        // return Response($response, 201);
     }
     public function login(Request $request)
     {
         //
-        $field = $request->validate([
+        $check = $request->validate([
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ]);
+        
+        // var_dump($check);
+
         // check email & password
-        $user = User::where('email', $field['email'])->first(); 
-        if ($user == false || Hash::check($field['password'], $user->password) == false ) {
+        $user = User::where('email', $request->email)->first(); 
+        if ($user == false || Hash::check($check['password'], $user->password) == false) {
             return response(['message' => 'Bad creds'], 401);
         }
         $token = $user->createToken('myapptoken')->plainTextToken;
-        $response = [
-            'user' => $user,
+        return response([
+            'message' => 'Login success',
             'token' => $token,
-        ];
-        return response($response, 201);
+        ], 401);
+        // $response = [
+        //     'user' => $user,
+        //     'token' => $token,
+        // ];
+        // return response($response, 201);
     }
     public function logout()
     {
