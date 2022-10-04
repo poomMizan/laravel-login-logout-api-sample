@@ -1,1 +1,2 @@
-Laravel Sanctum / Login Logout API with tokens
+Laravel Sanctum / Login Logout API with jwt 
+tokens
